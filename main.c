@@ -3,19 +3,28 @@
 #include <stdlib.h>
 #include <time.h>
 #include "screen.h"		// for user defined header, use double quotes
-
+#include "sound.h"
 int main()
 {
-	int arr[80];		// just for making  a bar chart
-	srand(time(NULL));
-	for(int i=0; i<80; i++)
-		arr[i] = rand()%70 + 30;
+	FILE *f;
+	short sd[80000];
+ 	for(;;){
+		system(RCMD);
+		f = fopen("test.wav", "r");
+		if(f == NULL){
+			printf("Cannot open file\n");
+			return 1;
+			}
 
 	clearScreen();
 	setColors(RED, bg(MAGENTA));
-//	printf("Printed from main.\n");
-	barChart(arr);
+	struct WAVHDR hdr;
+	fread(&hdr; sizeof(hdr), 1, f);	//read wav header
+	fread(&sd, sizeof(sd), 1, f);	//read wav data
+	fclose(f);
+	displayWAVHDR(hdr);
+	//displayWAVDATA(sd);
+	}
 	resetColors();
-//	printf("Another message.\n");
 	getchar();
 }

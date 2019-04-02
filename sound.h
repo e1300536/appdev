@@ -1,6 +1,7 @@
 // constants definiton
 #define RATE 16000		// 16000 samples per second
-
+#define DUR 5
+#define RCMD "arecord -r16000 -c1 -f S16_LE -d5 test.wav"
 // data structures
 struct WAVHDR
 {
@@ -21,3 +22,6 @@ struct WAVHDR
 	int Subchunk2Size;
 };
 // function declarations
+void displayWAVHDR(struct WAVHDR);
+void showID(char *,char *);
+void displayWAVDATA(short []);
