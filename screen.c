@@ -24,7 +24,7 @@ void clearScreen(void)
 
 void setColors(short fg, short bg)
 {
-	printf("\033[%d;%d;2m", fg, bg);
+	printf("\033[%d;%d;1m", fg, bg);
 	fflush(stdout);
 }
 
