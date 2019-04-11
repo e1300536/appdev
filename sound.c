@@ -1,7 +1,18 @@
 #include <stdio.h>
 #include <math.h>
 #include "sound.h"
+#include "screen.h"
 
+// this function gets an array of decibel functions and find out
+// the number of peaks in this array
+int findPeaks(int d[]){
+	int i, c=0;
+	for(i=1; i<80; i++){
+		if(d[i]>=75 && d[i-1]<75) c++;
+	}
+	if(d[0]>=75) c++;
+	return c;
+}
 // this function takes 1 second of samples (16000 in our
 // case) and calcualte 80 pieces of RMS value, and then
 // turn these values into decibels, and diplay them as
@@ -27,6 +38,10 @@ void displayWAVDATA(short s[]){
 	}					//end of for loop
 #ifndef DEBUG
 	barChart(db);
+	int peaks = findPeaks(db);		// get number of peaks
+	setColors(WHITE, bg(BLACK));		// set colors
+	printf("\033[1;41H");			// go to row 1, col 42
+	printf("Peaks: %d           \n", peaks);
 #endif
 }
 
@@ -60,7 +75,7 @@ void displayWAVHDR(struct WAVHDR h){
 	setColors(YELLOW, bg(GREEN));
 	printf("\033[1;21H");
 	printf("Sample rate=%d      \n", h.SampleRate);
-	setColors(WHITE, bg(MAGENTA));
+	setColors(RED, bg(WHITE));
 	printf("\033[1;61H");
 	printf("Duration=%.2f       \n", (float)h.Subchunk2Size/h.ByteRate);
 #endif

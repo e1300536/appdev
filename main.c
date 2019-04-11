@@ -5,6 +5,7 @@
 #include <time.h>
 #include "screen.h"		// for user defined header, use double quotes
 #include "sound.h"
+#include "comm.h"
 int main()
 {
 	FILE *f;
@@ -25,6 +26,7 @@ int main()
 		fread(&sd, sizeof(sd), 1, f);	//read wav data
 		displayWAVDATA(sd);
 		fclose(f);			//close the opened file
+		sendDATA(sd);
 	}
 	resetColors();
 }
