@@ -7,7 +7,8 @@ int main(int argc, char **argv)
 	CURLcode res;
 	char id[20], email[40], poststr[100];
 
-	if(argc < 3){
+	if(argc < 3)
+	{
 		printf("Usage: %s [ID] [email]\n", argv[0]);
 		return 1;  // Program stops because the user has not given enough information
 	}
