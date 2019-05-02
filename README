@@ -1,1 +1,185 @@
-# This is application development v1
+This project is to turn a Raspberry PI as an audio capture device. The device will be able to 
+collect sound and create a test tone, and create a visual bargraph of the data.
+
+Table of content
+	1.Configurations instructions
+	2.Installation instructions
+	3.Operating instructions
+	4.File manifest
+	5.Contact information
+	6.Credits and acknowledgements
+
+1.Configuration Instructions
+
+This application is created and run on Raspberry pi B+ 1.2.
+To run the application, a microphone and a network connection are required.
+
+1.1 Configure USB sound card as default audio device
+
+1.	RPi onboard sound card does not have a microphone interface. We have to change the default audio device to be a USB sound card. 
+
+2.	Boot up RPi, and apply the USB sound card. Use .lsusb. command to check if your USB sound card is mounted:
+	pi@raspberrypi:~ $ lsusb
+	Bus 001 Device 004: ID 0d8c:000c C-Media Electronics, Inc. Audio Adapter
+	Bus 001 Device 003: ID 0424:ec00 Standard Microsystems Corp. SMSC9512/9514 Fast Ethernet Adapter
+	Bus 001 Device 002: ID 0424:9514 Standard Microsystems Corp.
+	Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+
+3.	Use .sudo nano /etc/asound.conf.command and put following content to the file:
+	pcm.!default
+	{
+	  type plug
+	    slave 
+	    {
+	      pcm "hw:1,0"
+	  }
+	}
+	ctl.!default {
+	    type hw
+	    card 1
+	}
+
+4.	Go to your home directory. Use .nano .asoundrc. command and put the same code on the file.
+
+5.	Run .alsamixer. you should be able to see that USB sound card is the default audio device. You should maximize the volume of Mic for better sound capture rate.
+.............................................. AlsaMixer v1.0.28 ...............................................
+. Card: C-Media USB Headphone Set                                                      F1:  Help               .
+. Chip: USB Mixer                                                                      F2:  System information .
+. View: F3:[Playback] F4: Capture  F5: All                                             F6:  Select sound card  .
+. Item: Headphone [dB gain: -20.13, -20.13]                                            Esc: Exit               .
+.                                                                                                              .
+.                                                                                                              .
+.                                  ....               ....                                                     .
+.                                  .  .               .  .                                                     .
+.                                  .  .               .  .                                                     .
+.                                  .  .               .  .                                                     .
+.                                  .  .               .  .                                                     .
+.                                  .  .               .  .                                                     .
+.                                  .  .               .  .                                                     .
+.                                  .  .               ....                                                     .
+.                                  .  .               ....                                                     .
+.                                  .  .               ....                                                     .
+.                                  .  .               ....                                                     .
+.                                  .  .               ....                                                     .
+.                                  ....               ....                                                     .
+.                                  ....               ....                                                     .
+.                                  ....               ....               ....                                  .
+.                                  .OO.               .MM.               .OO.                                  .
+.                                  ....               ....               ....                                  .
+.                                 19<>19               52                                                      .
+.                          <    Headphone     >       Mic         Auto Gain Control                            .
+.                                                                                                              .
+.                                                                                                              .
+................................................................................................................
+
+
+1.2 Install Libcurl library
+
+1.	First use command "ls /usr/include/curl" or "ls /usr/include/arm-linux-gnueabihf/curl" to identify that libcurl library is installed.
+
+2.	If the folder doesn't exist, run "sudo apt-get update" to update the application list.
+
+3.	Run "sudo apt-get install libcurl3" to install the libcurl3.
+
+4.	Run "sudo apt-get install libcurl4-openssl-dev" to install the development API of libcurl4.
+
+2. Installation instructions
+
+2.1 SD-card preparation
+
+1.	Get a laptop/desktop PC with SD-card slot.
+
+2.	Insert micro-SD card into SD-card adapter. The adapter is in the same package as micro-SD card.
+ 
+3.	Insert SD-card adapter into the SD-card slot of your PC or card-reader. The system will inform you a USB storage device is available.
+
+4.	Go to website: https://www.raspberrypi.org/downloads/noobs/ and download .Noobs. image.
+
+5.	Open two Windows Explorer windows. Window 1 goes to your "Download" folder and open the ZIP file "NOOBS_v3_0_0.zip".
+ 
+6.	The 2nd Explorer window is located to your SD-card. Usually it is D:, E: or F: drive, depending on your system partition.
+
+7.	Copy everything from Explorer Window 1 to Window 2. This may take a few minutes.
+
+8.	Once copy is complete, verify that two Explorer windows have the same content.
+ 
+9.	Remove the USB device (SD-card) safely from your PC system.
+
+Required software:
+	RPi files (RPi)
+	Server files (Server)
+	PuTTy
+
+3.Operating Instructions
+	
+1.	Recording 1 second of audio into test.wav file using RPi
+
+2.	Outputting corresponding data in the console window
+
+3.	Header data and list of 80 RMS values ( DEBUG mode)
+	Displayed using bar (.) symbol ( UNICODE mode)
+	Displayed using asterisk ( * ) symbol ( non-UNICODE mode)
+
+4.	#define DEBUG // Conditional compiling
+	UNICODE / non-UNICODE mode
+	The UNICODE constant is defined in screen.h. In order to set it off / on, add / remove two slashes (//) respectively in the beginning of the following line:
+
+5.	#define UNICODE // Conditional compiling
+	COMM / non-COMM mode
+	The COMM constant is defined in comm.h. In order to set it off / on, add / remove two slashes (//) respectively in the beginning of the following line:
+
+6.	#define DEBUG // Conditional compiling
+	Setting the servers URL address on the RPi side
+	When COMM mode is set, one should change the URL address in comm.h file in the following line:
+
+7.	#define URL "http://your.server.com/.../sound.php"
+	Launching
+	Launch the RPi
+
+8.	Connect to the RPi via PuTTY
+
+9.	Make the object files and the sound.a application,
+	~$ make
+	
+10.	Run the program,
+	~$ ./sound.out
+
+11.	Go to the server's URL in the browser on the MOC
+	In order to stop the program, press Ctrl + C in the PuTTY console window.
+
+4.File manifest
+
+.c files:
+	comm.c
+	main.c
+	screen.c
+	sound.c
+	curltest.c
+.h files:
+	comm.h
+	screen.h
+	sound.h
+Back-end files:
+	sound.php
+Others:
+	makefile
+	README
+
+5.Contact Information
+
+	Samuel Silvola
+	Vaasa University Of Applied Sciences 
+	e1300536@edu.vamk.fi
+
+6.Credits and Acknowledgements
+
+Teacher:
+	Chao Gao
+	Principal Lecturer
+	Vaasa University of Applied Sciences
+	gc@puv.fi
+
+Used resources:
+	Portal
+	Wikipedia.org
+	Github.com
